@@ -1,0 +1,5 @@
+﻿variable,problema,cantidad
+SUPERVISOR,espacios_multiples,4
+CODIGO,formato_codigo_invalido,0
+TELEFONO,telefono_no_tiene_8_digitos,254
+TELEFONO,telefono_con_letras,10
