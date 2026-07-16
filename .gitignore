@@ -1,0 +1,14 @@
+data/xls_crudos
+*.xls
+*.xlsx
+
+~$*.xls
+~$*.xlsx
+.venv/
+venv/
+
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
