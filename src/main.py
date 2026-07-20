@@ -2,24 +2,24 @@ import limpiarcsvcrudos
 import revisiones
 import unirdata
 import diagnostico
+import descargaAutomatica 
 
 menu = '1'
 print('Bienvenido al proyecto 1')
 
 while menu != '0':
     print('- MENÚ -')
-    print('1. Análisis del estado inicial de los datos')
+    print('1. Descarga automatica de los archivos desde la página de MINEDUC')
+    print('2. Análisis del estado inicial de los datos')
     print('0. Salir')
 
     menu = input('Seleccione una opción:')
+    print('')
 
-    # -------------------------------------------------------------------
-    # Se reemplaza el bloque original (que solo imprimía los incisos a-c
-    # como texto fijo) por un submenú que llama a las funciones reales de
-    # diagnostico.py, y que carga el dataset unido con
-    # diagnostico.cargar_datos() antes de mostrar el submenú.
-    # -------------------------------------------------------------------
     if menu == '1':
+        print('-- Descarga automatica de los archivos desde la página de MINEDUC --')
+        descargaAutomatica.descarga_archivos()
+    elif menu == '2':
         try:
             dataframe = diagnostico.cargar_datos()
         except FileNotFoundError as error:
@@ -29,7 +29,7 @@ while menu != '0':
         submenu = ''
         while submenu != '0':
             print()
-            print('-- 1. Análisis del estado inicial de los datos --')
+            print('-- Análisis del estado inicial de los datos --')
             print('a. Número de registros y variables')
             print('b. Tipo de dato de cada variable')
             print('c. Cantidad y porcentaje de valores faltantes por variable')
@@ -37,15 +37,8 @@ while menu != '0':
             print('e. Cantidad de registros duplicados exactos')
             print('f. Variables con valores fuera de dominio o inconsistentes')
             print('g. Variables con formatos inconsistentes (espacios, mayúsculas, mojibake)')
-            # -----------------------------------------------------------
-            # Nuevas opciones: patrones de formato heterogéneos (ej.
-            # DISTRITO con varios esquemas) y categorías con variantes de
-            # escritura, detectadas ahora por diagnostico.py.
-            # -----------------------------------------------------------
-            print('f2. Categorías con posibles variantes de escritura')
-            print('g2. Patrones de formato heterogéneos por columna')
             print('h. Identificación de problemas potenciales de calidad de datos')
-            print('t. Ejecutar todo el diagnóstico y exportar reporte (docs/diagnostico_inicial.csv)')
+            print('i. Ejecutar todo el diagnóstico y exportar reporte (docs/diagnostico_inicial.csv)')
             print('0. Volver al menú principal')
 
             submenu = input('Seleccione una opción:')
@@ -73,18 +66,12 @@ while menu != '0':
                 diagnostico.imprimir_fuera_dominio(diagnostico.valores_fuera_dominio(dataframe))
  
                 print()
-                print('-- f2. Categorías con posibles variantes de escritura --')
+                print('-- Categorías con posibles variantes de escritura --')
                 categorias_df = diagnostico.categorias_similares(dataframe)
                 print(categorias_df.to_string(index=False) if not categorias_df.empty else 'Sin hallazgos.')
 
             elif submenu == 'g':
                 print(diagnostico.formatos_inconsistentes(dataframe).to_string(index=False))
-
-            elif submenu == 'f2':
-                resultado = diagnostico.categorias_similares(dataframe)
-                print(resultado.to_string(index=False) if not resultado.empty else 'Sin hallazgos.')
-
-            elif submenu == 'g2':
                 resultado = diagnostico.patrones_formato(dataframe)
                 print(resultado.to_string(index=False) if not resultado.empty else 'Sin hallazgos.')
 
@@ -102,7 +89,7 @@ while menu != '0':
                 for problema in problemas:
                     print(f'- {problema}')
 
-            elif submenu == 't':
+            elif submenu == 'i':
                 diagnostico.main()
 
             elif submenu == '0':
