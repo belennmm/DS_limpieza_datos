@@ -1,0 +1,19 @@
+﻿variable,problema_detectado,transformacion,registros_afectados,justificacion
+DIRECTOR,"1733 valores faltantes (~14% del total) y 382 valores sin información real (solo símbolos, guiones o '0')",Se reemplazaron por el placeholder 'DESCONOCIDO',2115,El nombre del director no es relevante para el análisis agregado; eliminar las filas perdería ~14% de los datos. El placeholder evita dejar el campo vacío sin inventar información.
+TELEFONO,"946 valores faltantes y 254 con formato distinto al esperado (8 dígitos): varios números separados por guion, letras, longitudes distintas, etc.",Se reemplazaron por el placeholder 'DESCONOCIDO',1200,El teléfono no se usa para análisis o predicción determinante en este proyecto; estandarizarlo con un placeholder evita perder registros completos por este campo.
+SUPERVISOR,"2 valores inválidos detectados en el diagnóstico: 1 compuesto solo por guiones/texto sin sentido, 1 nombre con error de escritura ('0' en vez de 'O')",El registro de guiones se reemplazó por 'DESCONOCIDO'; el error de escritura se corrigió reemplazando el '0' por 'O',6,Son casos puntuales (2 registros); no representan pérdida de información relevante.
+MUNICIPIO,"2161 valores no correspondían a un municipio sino a una zona específica de la ciudad (ej. 'ZONA 1', 'ZONA 10')","Se reemplazaron por 'GUATEMALA', ya que esas zonas pertenecen al municipio de Guatemala",2161,"El municipio es la unidad geográfica relevante para este análisis; se pierde el detalle de zona específica dentro de la ciudad, pero no la validez del análisis por municipio."
+DEPARTAMENTO,"2161 registro(s) con el valor 'CIUDAD CAPITAL', que no pertenece al catálogo oficial de departamentos",Se corrigió al valor 'GUATEMALA',2161,'Ciudad capital' se refiere al departamento de Guatemala; no existe como departamento propio en el catálogo oficial.
+DISTRITO,3 patrones de formato distintos (ej. 'AA-AA-AAAA' vs 'AA-AAA'); 5109 valores no siguen el patrón más común,Ninguna,0,Es un código administrativo identificador; las variaciones de formato no afectan su validez mientras siga cumpliendo su función de identificador.
+DIRECCION,Ninguno,,0,
+ESTABLECIMIENTO,Ninguno,,0,
+CODIGO,Ninguno,,0,
+STATUS,Ninguno,,0,
+DEPARTAMENTAL,Ninguno,,0,
+PLAN,Ninguno,,0,
+JORNADA,Ninguno,,0,
+MODALIDAD,Ninguno,,0,
+NIVEL,Ninguno,,0,
+AREA,Ninguno,,0,
+SECTOR,Ninguno,,0,
+todas las columnas de texto,Espacios al inicio/final y espacios múltiples internos,Se aplicó strip() y colapso de espacios internos a un solo espacio,4,Estandariza el texto sin alterar el contenido semántico de los valores.
