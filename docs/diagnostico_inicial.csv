@@ -75,49 +75,92 @@ d_valores_unicos,DEPARTAMENTAL,valores_unicos,26
 d_valores_unicos,origen,valores_unicos,23
 e_duplicados_exactos,,duplicados_exactos,0
 f_fuera_dominio,DEPARTAMENTO,valores_invalidos,1
+f_fuera_dominio,DEPARTAMENTO,ejemplos,CIUDAD CAPITAL
 f_fuera_dominio,SECTOR,valores_invalidos,0
+f_fuera_dominio,SECTOR,ejemplos,Ninguno
 f_fuera_dominio,NIVEL,valores_invalidos,0
+f_fuera_dominio,NIVEL,ejemplos,Ninguno
+f_fuera_dominio,STATUS,valores_invalidos,0
+f_fuera_dominio,STATUS,ejemplos,Ninguno
+f_fuera_dominio,AREA,valores_invalidos,0
+f_fuera_dominio,AREA,ejemplos,Ninguno
+f_fuera_dominio,SUPERVISOR,valores_invalidos,2
+f_fuera_dominio,SUPERVISOR,ejemplos,"---------------------------- ----------------------------------, EDNA ODILIA ACEVED0"
+f_fuera_dominio,DIRECTOR,valores_invalidos,28
+f_fuera_dominio,DIRECTOR,ejemplos,"-, --, ---, ----, -----, ------, -------, --------, ---------, ----------, -----------, ------------, -------------, --------------, ---------------, ----------------, -----------------, -------------------, --------------------, ---------------------, ---------------------------, -----------------------------, --------------------------------------, -----------------------------------------, ., .., ..., 0"
+f_fuera_dominio,MUNICIPIO,valores_invalidos,22
+f_fuera_dominio,MUNICIPIO,ejemplos,"ZONA 1, ZONA 10, ZONA 11, ZONA 12, ZONA 13, ZONA 14, ZONA 15, ZONA 16, ZONA 17, ZONA 18, ZONA 19, ZONA 2, ZONA 21, ZONA 24, ZONA 25, ZONA 3, ZONA 4, ZONA 5, ZONA 6, ZONA 7, ZONA 8, ZONA 9"
 f_fuera_dominio,CODIGO,valores_invalidos,0
-f_fuera_dominio,TELEFONO,valores_invalidos,254
+f_fuera_dominio,CODIGO,ejemplos,Ninguno
+f_fuera_dominio,TELEFONO,valores_invalidos,213
+f_fuera_dominio,TELEFONO,ejemplos,"0, 2202869-2202873, 22067, 2220-1723, 22202870-73, 22205283 2500774, 22205283 2530023, 22207754, 22207755, 22211863-22211864, 2223228, 22320559-22320560, 2232068, 22321385-22323734, 2232379, 22327654-22306279, 22505, 225052, 2250522, 22517920-22518076, 22560465-22560465, 2267425, 22692279-23314041, 22791315-16, 22852203, 22852205, 22868188-52069210, 22881328 7089673, 22894824-22881328, 22898990-22868990, 230835, 232-1011 y 251-6422, 2320559-2320560, 2325732, 2320075, 2307014, 23267252-09442325, 2329664-2500774, 23335736 AL 40, 23393249-50, 23605238-54, 23606627-28, 23661344-23661600, 23667821-22, 23680708-23371824, 23680906-5, 238-4283/2384284, 238-4425,251-4792, 2380864-2500509, 2384648-2512449-2514657, 24314989, 24310955, 24314989-24310955, 24328801-24329098, 24333306-24342926, 24345193 24361224, 24355424, 24314311, 24366554-55, 2437011, 24374353 55980275, 24392740-24392745-24311017, 24431649-24431650, 24493119-24493733, 24712407-24720315, 24712442, 24404722, 24712775-24405941, 24720151-3, 24720829-24720004, 24731585-24745554, 24796595-96, 24831196-97, 2485-4989, 24854408-24854398, 25,325,662,329,566, 251-7968,232-5955, 2517748 2384159, 2517748-2384159, 2541037, 2541191, 25763, 26725 Y 21568, 25763,26725 Y 21568, 26725,25763 Y 21568, 28,920,912,890,382, 2863760-8027980, 2868188, 2069210, 2981765-4831240, 3033, 31089418-53230377, 31193946-46843572, 3127247, 331-2247,332-4301 FAX 331-2247, 332-6696,362-9070,3629060, 3326696 3629070 3629060, 3430826, 3615861, 3680708-3371824, 40, 4085613, 41349750-54182377, 4140069, 4167076, 41724130-00000000, 4215928, 43521, 4360630-4360637, 439990 ESTX. 225-250, 4431414, 3109992, 4432004 4430917, 4712407-4720315, 4738493-4739588, 4739888, 4738983, 4751244, 4751249, 4764442/43/38/30, 499116237, 50160791-54845435, 515916, 5180422, 5200537, 52187388-47698840, 52660000-78323083, 52936124-79481614, 53060148 52192093, 53660792-55969273, 5388633, 53886336-53886336, 5460084, 5466347, 54937809-53096866, 55081344-57089673, 5510177, 5565-5011, 55985805 56929038, 55987951, 53088873, 56253613-78209540, 56769964-7766328, 56769964-77663283, 57 47546, 5732448, 57362216-79476691, 574479, 5783593, 586577, 5899378, 5899624, 59352245-79438029, 59396687-50381119, 5943821-5960117, 5944312-5986774, 5972296-5926180, 5974265 FAX 5974263, 5987951, 3088873, 6292082 6293622, 6361145- 6310279, 66206263-79420025, 66302972-57250943-55017662, 66313297-58964749, 66330748-52179627, 66355887-66312603, 6636790, 66420121-66420111, 66502390 65864538, 66532206-66353256, 66593584, 53062816, 66596063-66357276, 66609219, 22305978, 66771152-56, 7.73746E+15, 736617 Y 714495, 7618119, 7619218, 7631022-7615248, 7660201-7660149, 7674631-7635139, 77238200/58540260, 77609431-53012737, 77621113-77621019, 77632533-77632581, 77635371-31281299, 77648506-45419234-41177068, 77660002-53495743, 77663283-77663283, 7776400, 78208583-78209143, 78320432, 78327352, 78322410-78323310, 78325262-78321201, 78326590-40441097, 78391288-78392217, 78391332-78395850-78395997, 78392156-59881439, 78392709-78396701-78396702, 783928, 78393245-78393246, 7844007, 7846520, 78719889-42781085-42400974, 787203, 7872316, 78739432-79649696, 78803107-78803096, 78850105-53334877, 78880429-78880419, 78881148-78891068, 78887460-55022177, 78895329-78895332, 79224958-79223033, 79252112-79253509, 7927234, 7945177, 79479407-77566525, 79480009-2018, 79480085-50307050, 79484391-41051885, 79486433-79480166, 79524680-59864686, 79540830-79540909, 79649696-78739432, 8392658, 8441160, 8441331, 87215508-0755"
 g_formato_inconsistente,CODIGO,espacios_borde,0
 g_formato_inconsistente,CODIGO,espacios_multiples,0
+g_formato_inconsistente,CODIGO,caracteres_corruptos,0
 g_formato_inconsistente,DISTRITO,espacios_borde,0
 g_formato_inconsistente,DISTRITO,espacios_multiples,0
+g_formato_inconsistente,DISTRITO,caracteres_corruptos,0
 g_formato_inconsistente,DEPARTAMENTO,espacios_borde,0
 g_formato_inconsistente,DEPARTAMENTO,espacios_multiples,0
+g_formato_inconsistente,DEPARTAMENTO,caracteres_corruptos,0
 g_formato_inconsistente,MUNICIPIO,espacios_borde,0
 g_formato_inconsistente,MUNICIPIO,espacios_multiples,0
+g_formato_inconsistente,MUNICIPIO,caracteres_corruptos,0
 g_formato_inconsistente,ESTABLECIMIENTO,espacios_borde,0
 g_formato_inconsistente,ESTABLECIMIENTO,espacios_multiples,0
+g_formato_inconsistente,ESTABLECIMIENTO,caracteres_corruptos,0
 g_formato_inconsistente,DIRECCION,espacios_borde,0
 g_formato_inconsistente,DIRECCION,espacios_multiples,0
+g_formato_inconsistente,DIRECCION,caracteres_corruptos,0
 g_formato_inconsistente,TELEFONO,espacios_borde,0
 g_formato_inconsistente,TELEFONO,espacios_multiples,0
+g_formato_inconsistente,TELEFONO,caracteres_corruptos,0
 g_formato_inconsistente,TELEFONO,con_letras,10.0
 g_formato_inconsistente,SUPERVISOR,espacios_borde,0
 g_formato_inconsistente,SUPERVISOR,espacios_multiples,4
+g_formato_inconsistente,SUPERVISOR,caracteres_corruptos,0
 g_formato_inconsistente,DIRECTOR,espacios_borde,0
 g_formato_inconsistente,DIRECTOR,espacios_multiples,0
+g_formato_inconsistente,DIRECTOR,caracteres_corruptos,0
 g_formato_inconsistente,NIVEL,espacios_borde,0
 g_formato_inconsistente,NIVEL,espacios_multiples,0
+g_formato_inconsistente,NIVEL,caracteres_corruptos,0
 g_formato_inconsistente,SECTOR,espacios_borde,0
 g_formato_inconsistente,SECTOR,espacios_multiples,0
+g_formato_inconsistente,SECTOR,caracteres_corruptos,0
 g_formato_inconsistente,AREA,espacios_borde,0
 g_formato_inconsistente,AREA,espacios_multiples,0
+g_formato_inconsistente,AREA,caracteres_corruptos,0
 g_formato_inconsistente,STATUS,espacios_borde,0
 g_formato_inconsistente,STATUS,espacios_multiples,0
+g_formato_inconsistente,STATUS,caracteres_corruptos,0
 g_formato_inconsistente,MODALIDAD,espacios_borde,0
 g_formato_inconsistente,MODALIDAD,espacios_multiples,0
+g_formato_inconsistente,MODALIDAD,caracteres_corruptos,0
 g_formato_inconsistente,JORNADA,espacios_borde,0
 g_formato_inconsistente,JORNADA,espacios_multiples,0
+g_formato_inconsistente,JORNADA,caracteres_corruptos,0
 g_formato_inconsistente,PLAN,espacios_borde,0
 g_formato_inconsistente,PLAN,espacios_multiples,0
+g_formato_inconsistente,PLAN,caracteres_corruptos,0
 g_formato_inconsistente,DEPARTAMENTAL,espacios_borde,0
 g_formato_inconsistente,DEPARTAMENTAL,espacios_multiples,0
+g_formato_inconsistente,DEPARTAMENTAL,caracteres_corruptos,0
 g_formato_inconsistente,origen,espacios_borde,0
 g_formato_inconsistente,origen,espacios_multiples,0
+g_formato_inconsistente,origen,caracteres_corruptos,0
+g_patrones_formato,CODIGO,cantidad_patrones_distintos,1
+g_patrones_formato,CODIGO,patron_mas_comun,AA-AA-AAAA-AA
+g_patrones_formato,CODIGO,ejemplos_patron_distinto,
+g_patrones_formato,DISTRITO,cantidad_patrones_distintos,3
+g_patrones_formato,DISTRITO,patron_mas_comun,AA-AA-AAAA
+g_patrones_formato,DISTRITO,ejemplos_patron_distinto,"21-004, 21-001, 21-016, 25-000, 21-008"
 h_problemas_potenciales,,problema_1,"Valores faltantes en: DIRECTOR, TELEFONO, SUPERVISOR, DISTRITO, DIRECCION, ESTABLECIMIENTO"
 h_problemas_potenciales,,problema_2,DEPARTAMENTO: 1 valores fuera de dominio
-h_problemas_potenciales,,problema_3,TELEFONO: 254 valores fuera de dominio
-h_problemas_potenciales,,problema_4,TELEFONO: contiene letras en un campo numérico
-h_problemas_potenciales,,problema_5,SUPERVISOR: posibles problemas de formato de texto
+h_problemas_potenciales,,problema_3,SUPERVISOR: 2 valores fuera de dominio
+h_problemas_potenciales,,problema_4,DIRECTOR: 28 valores fuera de dominio
+h_problemas_potenciales,,problema_5,MUNICIPIO: 22 valores fuera de dominio
+h_problemas_potenciales,,problema_6,TELEFONO: 213 valores fuera de dominio
+h_problemas_potenciales,,problema_7,TELEFONO: contiene letras en un campo numérico
+h_problemas_potenciales,,problema_8,SUPERVISOR: posibles problemas de formato de texto
+h_problemas_potenciales,,problema_9,DISTRITO: 3 patrones de formato distintos (5109 valores no siguen el patrón más común)
