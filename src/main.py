@@ -2,6 +2,8 @@ import limpiarcsvcrudos
 import revisiones
 import unirdata
 import diagnostico
+import limpieza
+
 
 menu = '1'
 print('Bienvenido al proyecto 1')
@@ -9,6 +11,7 @@ print('Bienvenido al proyecto 1')
 while menu != '0':
     print('- MENÚ -')
     print('1. Análisis del estado inicial de los datos')
+    print("2. Limpieza del conjunto de datos")
     print('0. Salir')
 
     menu = input('Seleccione una opción:')
@@ -110,6 +113,12 @@ while menu != '0':
 
             else:
                 print('Seleccione una opción válida')
+    elif menu == '2':
+        try:
+            limpieza.main()
+        except FileNotFoundError as error:
+            print(error)
+            continue
 
     elif menu == '0':
         print('Gracias por utilizar el programa')
