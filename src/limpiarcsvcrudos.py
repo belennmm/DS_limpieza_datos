@@ -20,6 +20,7 @@ ENCABEZADOS_REQUERIDOS ={
     "SECTOR" ,
 }
 
+PATRON_CODIGO = r"^\d{2}-\d{2}-\d{4}-\d{2}$"
 
 def text_codif(ruta: Path ) -> tuple[str, str] :
 
@@ -83,13 +84,13 @@ def nuevo_archivo(ruta_csv: Path ) -> tuple[ pd.DataFrame, dict]:
     columns_originales = dataframe.columns.tolist()
     cantidad_filas_originales = dataframe.shape[0 ]
 
-    patron_codigo = r"^\d{2}-\d{2}-\d{4}-\d{2}$"
+    
 
     filas_validas = (
         dataframe["CODIGO"]
         .astype("string")
         .str.strip()
-        .str.match(patron_codigo, na=False)
+        .str.match(PATRON_CODIGO, na=False)
     )
 
     filas_eliminadas = int((~filas_validas).sum())
