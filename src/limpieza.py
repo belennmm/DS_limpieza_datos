@@ -42,8 +42,8 @@ UMBRAL_DUPLICADO_PARCIAL = 95  # score de similitud (0-100) de rapidfuzz. Se dec
 PATRON_BASURA = diagnostico.PATRON_BASURA
 PATRON_TELEFONO = diagnostico.PATRON_TELEFONO
 PATRON_ZONA = re.compile(r"^ZONA\s+\d+$", re.IGNORECASE)
-
-
+PATRON_BASURA_EXTENDIDO = re.compile(r"^[\s\-_.,;:\?*#/\\=]+$")
+COLUMNAS_EXCLUIR_BASURA_GENERAL = {"CODIGO", "DISTRITO", 'ESTABLECIMIENTO','TELEFONO','origen'}
 
 def _es_texto_basura(valor) -> bool:
     """Solo símbolos/espacios/puntos/guiones, o el dígito '0' solo, usado
@@ -111,10 +111,35 @@ def limpiar_telefono(df: pd.DataFrame, registro: list[dict]) -> pd.DataFrame:
     ))
     return df
 
+def limpiar_faltantes_generales(df: pd.DataFrame, registro: list[dict]) -> pd.DataFrame:
+    """Red de seguridad: cualquier NaN restante en columnas de texto (excepto
+    identificadores/estructurales) se reemplaza por el placeholder."""
+    columnas_texto = [
+        columna for columna in df.columns
+        if df[columna].dtype == "string" and columna not in {"CODIGO", "DISTRITO", "origen"}
+    ]
+    for columna in columnas_texto:
+        serie = df[columna]
+        mascara_faltante = serie.isna()
+        afectados = int(mascara_faltante.sum())
+        if afectados == 0:
+            continue
+        df.loc[mascara_faltante, columna] = PLACEHOLDER
+        registro.append(_nuevo_registro(
+            columna,
+            f"{afectados} valores faltantes no cubiertos por la limpieza específica de esta variable",
+            f"Se reemplazaron por el placeholder '{PLACEHOLDER}'",
+            afectados,
+            "Red de seguridad para no dejar celdas vacías sin documentar en el registro de transformaciones.",
+        ))
+    return df
+
 
 def limpiar_supervisor(df: pd.DataFrame, registro: list[dict]) -> pd.DataFrame:
     columna = "SUPERVISOR"
     serie = df[columna].astype("string")
+    mascara_faltante = serie.isna()
+    df.loc[mascara_faltante, columna] = PLACEHOLDER
 
     # 1. Error de escritura puntual: "0" en vez de "O" (ej. "ACEVED0")
     mascara_typo = serie.str.contains(r"[A-Za-zÀ-ÿ]0(?![0-9])", regex=True, na=False)
@@ -193,6 +218,27 @@ def documentar_distrito_sin_cambios(registro: list[dict]) -> None:
         "validez mientras siga cumpliendo su función de identificador.",
     ))
 
+def verificar_consistencia_departamento_departamental(df: pd.DataFrame) -> pd.DataFrame:
+    """Punto 5.h: consistencia entre DEPARTAMENTO y DEPARTAMENTAL.
+
+    No se corrige automáticamente porque una Dirección Departamental puede
+    administrar zonas con nombres compuestos (ej. 'GUATEMALA NORTE',
+    'GUATEMALA SUR'); se documenta como candidato para revisión manual,
+    igual que los duplicados parciales.
+    """
+    columna_dep = df["DEPARTAMENTO"].astype("string").str.upper().str.strip()
+    columna_departamental = df["DEPARTAMENTAL"].astype("string").str.upper().str.strip()
+
+    mascara_inconsistente = pd.Series(
+        [
+            (depto not in depatamental) if pd.notna(depto) and pd.notna(depatamental) else False
+            for depto, depatamental in zip(columna_dep, columna_departamental)
+        ],
+        index=df.index,
+    )
+
+    candidatos = df.loc[mascara_inconsistente, ["CODIGO", "DEPARTAMENTO", "DEPARTAMENTAL"]].drop_duplicates()
+    return candidatos
 
 def documentar_variables_sin_problemas(registro: list[dict]) -> None:
     """Variables donde el diagnóstico no encontró problemas (según el plan)."""
@@ -203,6 +249,18 @@ def documentar_variables_sin_problemas(registro: list[dict]) -> None:
     for columna in sin_problemas:
         registro.append(_nuevo_registro(columna, "Ninguno", "", 0, ""))
 
+def documentar_consistencia_entre_variables(df: pd.DataFrame, registro: list[dict]) -> None:
+    candidatos = verificar_consistencia_departamento_departamental(df)
+    registro.append(_nuevo_registro(
+        "DEPARTAMENTO / DEPARTAMENTAL",
+        f"{candidatos.shape[0]} registros donde el nombre del departamento no aparece dentro "
+        f"del valor de DEPARTAMENTAL",
+        "Ninguna (no se corrige automáticamente)",
+        candidatos.shape[0],
+        "Una Dirección Departamental puede cubrir subdivisiones con nombre compuesto (ej. "
+        "'GUATEMALA NORTE'); se documenta como candidato para revisión manual y no se asume "
+        "que sea un error real.",
+    ))
 
 def normalizar_espacios(df: pd.DataFrame, registro: list[dict]) -> pd.DataFrame:
     """Trim + colapso de espacios múltiples en todas las columnas de texto.
@@ -235,7 +293,51 @@ def normalizar_espacios(df: pd.DataFrame, registro: list[dict]) -> pd.DataFrame:
     ))
     return df
 
+def limpiar_valores_basura_generales(df: pd.DataFrame, registro: list[dict]) -> pd.DataFrame:
+    """Segunda pasada, transversal a todas las columnas de texto (excepto
+    identificadores): reemplaza por DESCONOCIDO celdas que son solo
+    separadores/puntuación (usa PATRON_BASURA_EXTENDIDO, que agrega
+    coma/punto y coma a diagnostico.PATRON_BASURA) o tokens nulos
+    disfrazados ya catalogados en diagnostico.TOKENS_NULOS_DISFRAZADOS
+    (N/A, NULL, SIN DATO, '0', etc.), y que no quedaron cubiertos por la
+    limpieza específica de DIRECTOR/TELEFONO/SUPERVISOR.
+    """
+    columnas_texto = [
+        columna for columna in df.columns
+        if df[columna].dtype == "string" and columna not in COLUMNAS_EXCLUIR_BASURA_GENERAL
+    ]
 
+    for columna in columnas_texto:
+        serie = df[columna].astype("string")
+        no_nulo = serie.notna()
+
+        mascara_separadores = serie.str.match(PATRON_BASURA_EXTENDIDO, na=False)
+        mascara_token_nulo = serie.str.upper().str.strip().isin(diagnostico.TOKENS_NULOS_DISFRAZADOS)
+        mascara_ya_placeholder = serie == PLACEHOLDER
+
+        mascara_total = no_nulo & (mascara_separadores | mascara_token_nulo) & ~mascara_ya_placeholder
+        afectados = int(mascara_total.sum())
+
+        if afectados == 0:
+            continue
+
+        ejemplos = sorted(serie.loc[mascara_total].unique())[:5]
+        df.loc[mascara_total, columna] = PLACEHOLDER
+
+        registro.append(_nuevo_registro(
+            columna,
+            f"{afectados} valores compuestos únicamente por separadores (ej. ',,', '--', '..') "
+            f"o tokens nulos disfrazados (N/A, NULL, SIN DATO, etc.) no cubiertos por la limpieza "
+            f"específica de esta variable. Ejemplos: {', '.join(ejemplos)}",
+            f"Se reemplazaron por el placeholder '{PLACEHOLDER}'",
+            afectados,
+            "Estos valores no aportan información real dentro del dominio esperado de la variable; "
+            "se estandarizan igual que en DIRECTOR/TELEFONO/SUPERVISOR para mantener consistencia "
+            "en todo el dataset. Se excluyen CODIGO y DISTRITO porque en esas columnas los guiones "
+            "son parte estructural del identificador, no relleno (ver Parte 4 del plan).",
+        ))
+
+    return df
 # ---------------------------------------------------------------------
 # Duplicados parciales (punto 5.g.ii): solo detección, sin fusión automática
 # ---------------------------------------------------------------------
@@ -321,7 +423,7 @@ def detectar_duplicados_parciales(
 
 
 # Métricas de calidad (punto 8): antes / después
-def _metricas_calidad(df: pd.DataFrame) -> dict:
+def _metricas_calidad(df: pd.DataFrame,posibles_duplicados="no calculado") -> dict:
     faltantes_df = diagnostico.valores_faltantes(df)
     total_faltantes = int(faltantes_df["faltantes"].sum())
     total_celdas = df.shape[0] * df.shape[1]
@@ -349,6 +451,7 @@ def _metricas_calidad(df: pd.DataFrame) -> dict:
         "Valores faltantes": f"{total_faltantes} ({porcentaje}%)",
         "Variables con NA": variables_con_na,
         "Duplicados exactos": duplicados_exactos,
+        "Posibles duplicados": posibles_duplicados,
         "Variables con formato inconsistente": variables_formato_inconsistente,
         "Variables con tipo incorrecto": 0,  # todas string por diseño, ver Libro de Códigos
         "Categorías inconsistentes": categorias_inconsistentes,
@@ -407,6 +510,18 @@ def validar_conjunto_limpio(df: pd.DataFrame) -> list[tuple[str, bool, str]]:
         f"con otro tipo: {tipos_incorrectos}",
     ))
 
+    categorias_df = diagnostico.categorias_similares(df)
+    total_variantes = int(categorias_df["grupos_con_variantes"].sum()) if not categorias_df.empty else 0
+    variables_con_variantes = (
+        categorias_df.loc[categorias_df["grupos_con_variantes"] > 0, "variable"].tolist()
+        if not categorias_df.empty else []
+    )
+    resultados.append((
+        "Sin categorías duplicadas por diferencias de escritura",
+        total_variantes == 0,
+        f"grupos con variantes: {total_variantes} (variables: {variables_con_variantes})",
+    ))
+
     tiene_ciudad_capital = bool(
         (df["DEPARTAMENTO"].astype("string").str.upper() == "CIUDAD CAPITAL").any()
     )
@@ -441,6 +556,8 @@ def limpiar(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     df = limpiar_supervisor(df, registro)
     df = limpiar_municipio(df, registro)
     df = limpiar_departamento(df, registro)
+    df = limpiar_valores_basura_generales(df, registro)  
+    df = limpiar_faltantes_generales(df, registro)
     documentar_distrito_sin_cambios(registro)
     documentar_variables_sin_problemas(registro)
     df = normalizar_espacios(df, registro)
@@ -453,11 +570,25 @@ def main() -> None:
     RUTA_REGISTRO_TRANSFORMACIONES.parent.mkdir(parents=True, exist_ok=True)
 
     df_original = diagnostico.cargar_datos(RUTA_ENTRADA)
-    metricas_antes = _metricas_calidad(df_original)
+
+    try:
+        posibles_duplicados_antes = detectar_duplicados_parciales(df_original).shape[0]
+    except ImportError as error:
+        posibles_duplicados_antes = f"no calculado ({error})"
+
+    metricas_antes = _metricas_calidad(df_original, posibles_duplicados_antes)
 
     df_limpio, registro_df = limpiar(df_original.copy())
-    metricas_despues = _metricas_calidad(df_limpio)
+    try:
+        duplicados_parciales_df = detectar_duplicados_parciales(df_limpio)
+        posibles_duplicados_despues = duplicados_parciales_df.shape[0]
+    except ImportError as error:
+        duplicados_parciales_df = None
+        posibles_duplicados_despues = f"no calculado ({error})"
+
+    metricas_despues = _metricas_calidad(df_limpio, posibles_duplicados_despues)
     metricas_despues["Errores corregidos"] = int(registro_df["registros_afectados"].sum())
+
 
     df_limpio.to_csv(RUTA_SALIDA, index=False, encoding="utf-8-sig")
     registro_df.to_csv(RUTA_REGISTRO_TRANSFORMACIONES, index=False, encoding="utf-8-sig")
@@ -481,17 +612,18 @@ def main() -> None:
     imprimir_validaciones(resultados_validacion)
     print()
 
+
+
     print("Buscando posibles duplicados parciales (esto puede tardar unos segundos)...")
-    try:
-        duplicados_parciales_df = detectar_duplicados_parciales(df_limpio)
+    if duplicados_parciales_df is not None:
         duplicados_parciales_df.to_csv(RUTA_DUPLICADOS_PARCIALES, index=False, encoding="utf-8-sig")
         print(
-            f"Candidatos a duplicado parcial encontrados: {duplicados_parciales_df.shape[0]} "
+            f"Candidatos a duplicado parcial (después de limpieza): {duplicados_parciales_df.shape[0]} "
             f"-> {RUTA_DUPLICADOS_PARCIALES.resolve()}"
         )
         print("Son candidatos para revisión manual; no se fusionan automáticamente.")
-    except ImportError as error:
-        print(f"[Aviso] {error}")
+    else:
+        print(f"[Aviso] Posibles duplicados: {posibles_duplicados_despues}")
 
 
 if __name__ == "__main__":
