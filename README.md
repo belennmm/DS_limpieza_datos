@@ -101,4 +101,4 @@ data/processed/establecimientos_limpio.csv
 
 ## Documento Compartido 
 
-https://uvggt-my.sharepoint.com/:w:/r/personal/roj23813_uvg_edu_gt/Documents/proyecto1_DataScience.docx?d=w9b4b2d30fe7f441fb5606c9115624739&csf=1&web=1&e=NLuw0I
+https://uvggt-my.sharepoint.com/:w:/g/personal/roj23813_uvg_edu_gt/IQAwLUubf_4fRLVgbJEVYkc5AUSuy9iSP1NUaW-t4BCKRP8
