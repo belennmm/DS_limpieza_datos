@@ -98,3 +98,7 @@ data/processed/establecimientos_limpio.csv
 
 ### Nota:
 > El portal del MINEDUC puede modificar su estructura, lo que podría requerir actualizar el script de descarga.
+
+## Documento Compartido 
+
+https://uvggt-my.sharepoint.com/:w:/r/personal/roj23813_uvg_edu_gt/Documents/proyecto1_DataScience.docx?d=w9b4b2d30fe7f441fb5606c9115624739&csf=1&web=1&e=NLuw0I
